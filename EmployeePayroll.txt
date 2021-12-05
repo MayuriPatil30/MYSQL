@@ -1,0 +1,232 @@
+mysql> create database payroll_service;
+Query OK, 1 row affected (0.01 sec)
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mayuridb           |
+| mysql              |
+| payroll_service    |
+| payrollservice     |
+| performance_schema |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+mysql> use payroll_service;
+Database changed
+
+mysql> create table employee_payroll(id int,name varchar(50),salary int,start_date date);
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> select * from employee_payroll;
++------+---------+--------+------------+
+| id   | name    | salary | start_date |
++------+---------+--------+------------+
+|    1 | Mayuri  |    550 | 2020-01-01 |
+|    2 | Pranali |    456 | 2020-05-07 |
+|    3 | Amruta  |    678 | 2019-03-02 |
+|    4 | Raj     |    560 | 2020-06-07 |
+|    5 | Rishabh |    430 | 2021-06-11 |
++------+---------+--------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee_payroll where start_date between cast('2020-01-01' as date) and date(now());
++------+---------+--------+------------+
+| id   | name    | salary | start_date |
++------+---------+--------+------------+
+|    1 | Mayuri  |    550 | 2020-01-01 |
+|    2 | Pranali |    456 | 2020-05-07 |
+|    4 | Raj     |    560 | 2020-06-07 |
+|    5 | Rishabh |    430 | 2021-06-11 |
++------+---------+--------+------------+
+4 rows in set (0.00 sec)
+
+mysql> alter table employee_payroll add gender varchar(10);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> select * from employee_payroll;
++------+---------+--------+------------+--------+
+| id   | name    | salary | start_date | gender |
++------+---------+--------+------------+--------+
+|    1 | Mayuri  |    550 | 2020-01-01 | NULL   |
+|    2 | Pranali |    456 | 2020-05-07 | NULL   |
+|    3 | Amruta  |    678 | 2019-03-02 | NULL   |
+|    4 | Raj     |    560 | 2020-06-07 | NULL   |
+|    5 | Rishabh |    430 | 2021-06-11 | NULL   |
++------+---------+--------+------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> update employee_payroll set gender='M' where name ='Raj' or name='Rishabh';
+Query OK, 2 rows affected (0.00 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from employee_payroll;
++------+---------+--------+------------+--------+
+| id   | name    | salary | start_date | gender |
++------+---------+--------+------------+--------+
+|    1 | Mayuri  |    550 | 2020-01-01 | NULL   |
+|    2 | Pranali |    456 | 2020-05-07 | NULL   |
+|    3 | Amruta  |    678 | 2019-03-02 | NULL   |
+|    4 | Raj     |    560 | 2020-06-07 | M      |
+|    5 | Rishabh |    430 | 2021-06-11 | M      |
++------+---------+--------+------------+--------+
+5 rows in set (0.00 sec)
+mysql> update employee_payroll set gender='F' where name ='Mayuri' or name='Pranali' or name='Amruta';
+Query OK, 3 rows affected (0.00 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> select * from employee_payroll;
++------+---------+--------+------------+--------+
+| id   | name    | salary | start_date | gender |
++------+---------+--------+------------+--------+
+|    1 | Mayuri  |    550 | 2020-01-01 | F      |
+|    2 | Pranali |    456 | 2020-05-07 | F      |
+|    3 | Amruta  |    678 | 2019-03-02 | F      |
+|    4 | Raj     |    560 | 2020-06-07 | M      |
+|    5 | Rishabh |    430 | 2021-06-11 | M      |
++------+---------+--------+------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select sum(salary) from employee_payroll where gender='F' group by gender;
++-------------+
+| sum(salary) |
++-------------+
+|        1684 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(salary) from employee_payroll where gender='M' group by gender;
++-------------+
+| sum(salary) |
++-------------+
+|         990 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from employee_payroll where gender='F' group by gender;
++-------------+
+| avg(salary) |
++-------------+
+|    561.3333 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from employee_payroll where gender='M' group by gender;
++-------------+
+| avg(salary) |
++-------------+
+|    495.0000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select min(salary) from employee_payroll where gender='F' group by gender;
++-------------+
+| min(salary) |
++-------------+
+|         456 |
++-------------+
+1 row in set (0.00 sec)
+
+
+mysql> select min(salary) from employee_payroll where gender='m' group by gender;
++-------------+
+| min(salary) |
++-------------+
+|         430 |
++-------------+
+1 row in set (0.00 sec)
+mysql> select max(salary) from employee_payroll where gender='f' group by gender;
++-------------+
+| max(salary) |
++-------------+
+|         678 |
++-------------+
+1 row in set (0.00 sec)
+mysql> select max(salary) from employee_payroll where gender='m' group by gender;
++-------------+
+| max(salary) |
++-------------+
+|         560 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select count(salary) from employee_payroll where gender='f' group by gender;
++---------------+
+| count(salary) |
++---------------+
+|             3 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select count(salary) from employee_payroll where gender='m' group by gender;
++---------------+
+| count(salary) |
++---------------+
+|             2 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> alter table employee_payroll add (phone int,address varchar(50),department varchar(50) not null);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_payroll;
++------+---------+--------+------------+--------+-------+---------+------------+
+| id   | name    | salary | start_date | gender | phone | address | department |
++------+---------+--------+------------+--------+-------+---------+------------+
+|    1 | Mayuri  |    550 | 2020-01-01 | F      |  NULL | NULL    |            |
+|    2 | Pranali |    456 | 2020-05-07 | F      |  NULL | NULL    |            |
+|    3 | Amruta  |    678 | 2019-03-02 | F      |  NULL | NULL    |            |
+|    4 | Raj     |    560 | 2020-06-07 | M      |  NULL | NULL    |            |
+|    5 | Rishabh |    430 | 2021-06-11 | M      |  NULL | NULL    |            |
++------+---------+--------+------------+--------+-------+---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> update employee_payroll set address="mumbai" where id=5;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Employee_payroll;
++------+---------+--------+------------+--------+-------+-----------+------------+
+| id   | name    | salary | start_date | gender | phone | address   | department |
++------+---------+--------+------------+--------+-------+-----------+------------+
+|    1 | Mayuri  |    550 | 2020-01-01 | F      |  NULL | kolhapur  |            |
+|    2 | Pranali |    456 | 2020-05-07 | F      |  NULL | Haidrabad |            |
+|    3 | Amruta  |    678 | 2019-03-02 | F      |  NULL | goa       |            |
+|    4 | Raj     |    560 | 2020-06-07 | M      |  NULL | pune      |            |
+|    5 | Rishabh |    430 | 2021-06-11 | M      |  NULL | mumbai    |            |
++------+---------+--------+------------+--------+-------+-----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee_payroll;
++------+---------+--------+------------+--------+-------+-----------+------------+----------+-----------+------------+-----------+--------+
+| id   | name    | salary | start_date | gender | phone | address   | department | Basicpay | Deduction | Taxablepay | incometax | netpay |
++------+---------+--------+------------+--------+-------+-----------+------------+----------+-----------+------------+-----------+--------+
+|    1 | Mayuri  |    550 | 2020-01-01 | F      |  NULL | kolhapur  |            |        0 |         0 |          0 |         0 |      0 |
+|    2 | Pranali |    456 | 2020-05-07 | F      |  NULL | Haidrabad |            |        0 |         0 |          0 |         0 |      0 |
+|    3 | Amruta  |    678 | 2019-03-02 | F      |  NULL | goa       |            |        0 |         0 |          0 |         0 |      0 |
+|    4 | Raj     |    560 | 2020-06-07 | M      |  NULL | pune      |            |        0 |         0 |          0 |         0 |      0 |
+|    5 | Rishabh |    430 | 2021-06-11 | M      |  NULL | mumbai    |            |        0 |         0 |          0 |         0 |      0 |
++------+---------+--------+------------+--------+-------+-----------+------------+----------+-----------+------------+-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO employee_payroll(Id,Name,Salary, Start_date,Gender, Address,Department,Basicpay,Deduction,Taxablepay,incometax,netpay) VALUES (6,'Terisa',459,'2021-08-09','F','Bangolore','Sales',430,100,300,40,300), (7,'Terisa',678,'2021=01-27','F','Banglore','Marketing',600,200,400,50,298);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_payroll;
++------+---------+--------+------------+--------+-------+-----------+------------+----------+-----------+------------+-----------+--------+
+| id   | name    | salary | start_date | gender | phone | address   | department | Basicpay | Deduction | Taxablepay | incometax | netpay |
++------+---------+--------+------------+--------+-------+-----------+------------+----------+-----------+------------+-----------+--------+
+|    1 | Mayuri  |    550 | 2020-01-01 | F      |  NULL | kolhapur  |            |        0 |         0 |          0 |         0 |      0 |
+|    2 | Pranali |    456 | 2020-05-07 | F      |  NULL | Haidrabad |            |        0 |         0 |          0 |         0 |      0 |
+|    3 | Amruta  |    678 | 2019-03-02 | F      |  NULL | goa       |            |        0 |         0 |          0 |         0 |      0 |
+|    4 | Raj     |    560 | 2020-06-07 | M      |  NULL | pune      |            |        0 |         0 |          0 |         0 |      0 |
+|    5 | Rishabh |    430 | 2021-06-11 | M      |  NULL | mumbai    |            |        0 |         0 |          0 |         0 |      0 |
+|    6 | Terisa  |    459 | 2021-08-09 | F      |  NULL | Bangolore | Sales      |      430 |       100 |        300 |        40 |    300 |
+|    7 | Terisa  |    678 | 2021-01-27 | F      |  NULL | Banglore  | Marketing  |      600 |       200 |        400 |        50 |    298 |
++------+---------+--------+------------+--------+-------+-----------+------------+----------+-----------+------------+-----------+--------+
+7 rows in set (0.00 sec)
